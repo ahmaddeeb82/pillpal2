@@ -6,6 +6,7 @@ use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class Handler extends ExceptionHandler
 {
@@ -32,7 +33,11 @@ class Handler extends ExceptionHandler
 
     public function unauthenticated($request, AuthenticationException $exception)
     {
-        return ApiResponse::apiSendResponse(401, 'Unauthenticated.');
-
+        if (LaravelLocalization::getCurrentLocale() == 'ar') {
+            $message = 'لا يوجد صلاحيات';
+        } else {
+            $message = 'Unauthorized';
+        }
+        return ApiResponse::apiSendResponse(401, $message);
     }
 }
