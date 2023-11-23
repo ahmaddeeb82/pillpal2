@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -26,5 +28,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function unauthenticated($request, AuthenticationException $exception)
+    {
+        return ApiResponse::apiSendResponse(401, 'Unauthenticated.');
+
     }
 }
