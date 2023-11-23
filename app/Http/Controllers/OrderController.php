@@ -43,7 +43,7 @@ class OrderController extends Controller
 
         foreach ($order_meds as $order_med) {
 
-            if (!isset($order_med['medicine_id']) || !$order_med['quantity']) {
+            if (!isset($order_med['medicine_id']) || !isset($order_med['quantity'])) {
                 $error = true;
                 break;
             }
@@ -77,9 +77,13 @@ class OrderController extends Controller
         }
 
         if ($error) {
-            foreach ($addedMedicines as $addedMedicine) {
-                $addedMedicine->delete();
+            if($addedMedicines) {
+                foreach ($addedMedicines as $addedMedicine) {
+                    $addedMedicine->delete();
+                }
             }
+
+            $order->delete();
 
             if(LaravelLocalization::getCurrentLocale() == 'ar') {
                 $message = 'بيانات الطلب الذي تقوم به غير مكتملة.';
@@ -88,7 +92,7 @@ class OrderController extends Controller
                 $message = 'Some Order Data Are Missed.';
             }
 
-            return ApiResponse::apiSendResponse(400, 'Some Order Data Are Missed');
+            return ApiResponse::apiSendResponse(400, $message);
         }
 
         $order->update([
