@@ -23,7 +23,7 @@ Route::middleware('ApiLocalize')->group(function () {
     Route::post('login', [AuthController::class,'login']);
     Route::post('register', [AuthController::class,'register']);
     Route::middleware('auth:api')->group(function () {
-        Route::post('logout', [AuthController::class,'logout']);
+        Route::get('logout', [AuthController::class,'logout']);
     /* ----------------- Order Routes ----------------- */
         Route::post('addOrder', [OrderController::class,'createOrder']);
         Route::get('orders', [OrderController::class,'userOrders']);
