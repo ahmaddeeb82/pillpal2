@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -28,6 +29,9 @@ Route::middleware('ApiLocalize')->group(function () {
         Route::post('addOrder', [OrderController::class,'createOrder']);
         Route::get('orders', [OrderController::class,'userOrders']);
         Route::get('orderDetails', [OrderController::class,'orderDetails']);
+        //----------------Company Routes--------------------------
+        Route::get('company',[CompanyController::class,'company']);
+        Route::get('companies',[CompanyController::class,'companies']);
     });
 });
 
