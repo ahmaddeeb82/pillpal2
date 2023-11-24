@@ -112,10 +112,10 @@ class OrderController extends Controller
     public function userOrders(Request $request)
     {
         $user_id = auth()->user()->id;
-
+        
         $orders = Order::where('user_id', $user_id)->get();
-
-        if(isEmpty($orders)) {
+        // return $orders;
+        if(count($orders) == 0) {
 
             if(LaravelLocalization::getCurrentLocale() == 'ar') {
                 $message = 'لا يقم هذا المستخدم بإضافة أي طلبيات';
