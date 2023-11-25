@@ -77,7 +77,7 @@ class OrderController extends Controller
         }
 
         if ($error) {
-            if($addedMedicines) {
+            if(isset($addedMedicines)) {
                 foreach ($addedMedicines as $addedMedicine) {
                     $addedMedicine->delete();
                 }
