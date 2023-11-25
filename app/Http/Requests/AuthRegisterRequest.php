@@ -33,14 +33,27 @@ class AuthRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'first_name' => 'required',
-            'last_name'=> 'required',
-            'phone' => 'required|unique:users,phone,'.auth()->user()->id.'|phone:INTERNATIONAL',
-            'address'=> 'required',
-            'password' => 'required|min:6',
-            'confirm_password' => 'required|same:password',
-        ];
+        if(auth()->check()) {
+            return [
+                'first_name' => 'required',
+                'last_name'=> 'required',
+                'phone' => 'required|unique:users,phone,'.auth()->user()->id.'|phone:INTERNATIONAL',
+                'address'=> 'required',
+                'password' => 'required|min:6',
+                'confirm_password' => 'required|same:password',
+            ];
+        }
+        else {
+            return [
+                'first_name' => 'required',
+                'last_name'=> 'required',
+                'phone' => 'required|unique:users|phone:INTERNATIONAL',
+                'address'=> 'required',
+                'password' => 'required|min:6',
+                'confirm_password' => 'required|same:password',
+            ];
+        }
+        
     }
 
     public function attributes(): array
