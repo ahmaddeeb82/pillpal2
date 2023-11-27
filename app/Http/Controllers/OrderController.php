@@ -127,7 +127,7 @@ class OrderController extends Controller
         $user_id = auth()->user()->id;
 
         $orders = Order::where('user_id', $user_id)->get();
-        // return $orders;
+
         if (count($orders) == 0) {
 
             return ApiResponse::apiSendResponse(
@@ -147,7 +147,17 @@ class OrderController extends Controller
 
     public function orderDetails(Request $request)
     {
-        $order = Order::where('id', $request->order_id)->first();
+        $order_id = $request->order_id;
+        if(!$order_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
+        }
+
+
+        $order = Order::where('id', $order_id)->first();
 
         if (!$order) {
             return ApiResponse::apiSendResponse(
@@ -163,5 +173,51 @@ class OrderController extends Controller
             'تمت إعادة الطلب بنجاح',
             new OrderMedicineResource($order)
         );
+    }
+
+    public function deleteOrder(Request $request)
+    {
+        $order_id = $request->order_id;
+        if(!$order_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
+        }
+
+        $order = Order::where('id', $order_id)->first();
+        if(!$order) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
+        }
+        
+        if($order->status != 'in_preparation') {
+            return ApiResponse::apiSendResponse(
+                403,
+                'Forbiden',
+                'هذا الإجراء غير مسموح به'
+            );
+        }
+
+        $medicines = $order->medicines;
+
+        foreach( $medicines as $medicine ) {
+            $medicine->update([
+                'quantity' => $medicine->quantity + $medicine->pivot->quantity,
+            ]);
+        }
+
+        $order->delete();
+
+        return ApiResponse::apiSendResponse(
+            200,
+            'Order Has Been Deleted Successfully',
+            'تم حذف الطلبية بنجاح'
+        );
+        
     }
 }
