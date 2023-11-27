@@ -10,6 +10,7 @@ use App\Models\MedicineOrder;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 use function PHPUnit\Framework\isEmpty;
@@ -128,6 +129,7 @@ class OrderController extends Controller
 
         $orders = Order::where('user_id', $user_id)->get();
 
+
         if (count($orders) == 0) {
 
             return ApiResponse::apiSendResponse(
@@ -136,6 +138,7 @@ class OrderController extends Controller
                 'لا يقم هذا المستخدم بإضافة أي طلبيات'
             );
         }
+
 
         return ApiResponse::apiSendResponse(
             200,
@@ -213,11 +216,15 @@ class OrderController extends Controller
 
         $order->delete();
 
+        $user_id = auth()->user()->id;
+
+        $orders = Order::where('user_id', $user_id)->get();
+
         return ApiResponse::apiSendResponse(
             200,
-            'Order Has Been Deleted Successfully',
-            'تم حذف الطلبية بنجاح'
+            'Orders Has Been Deleted Successfully',
+            'تمت حذف طلبيات المستخدم بنجاح',
+            OrderResource::collection($orders)
         );
-        
     }
 }
