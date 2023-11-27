@@ -16,6 +16,6 @@ class Order extends Model
     }
 
     public function medicines() {
-        return $this->belongsToMany(Medicine::class,);
+        return $this->belongsToMany(Medicine::class,)->withPivot('quantity', 'quantity_price');
     }
 }
