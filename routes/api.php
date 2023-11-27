@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,12 +27,16 @@ Route::middleware('ApiLocalize')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('logout', [AuthController::class,'logout']);
     /* ----------------- Order Routes ----------------- */
-        Route::post('addOrder', [OrderController::class,'createOrder']);
-        Route::get('orders', [OrderController::class,'userOrders']);
-        Route::get('orderDetails', [OrderController::class,'orderDetails']);
+        Route::group(['prefix'=> 'orders'], function () {
+        Route::post('add', [OrderController::class,'createOrder']);
+        Route::get('list', [OrderController::class,'userOrders']);
+        Route::get('detail', [OrderController::class,'orderDetails']);
+        Route::delete('delete', [OrderController::class,'deleteOrder']);
+        });
         //----------------Company Routes--------------------------
         Route::get('company',[CompanyController::class,'company']);
         Route::get('companies',[CompanyController::class,'companies']);
+
     });
 });
 
