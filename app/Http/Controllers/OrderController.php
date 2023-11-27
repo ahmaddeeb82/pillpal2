@@ -23,14 +23,11 @@ class OrderController extends Controller
 
         if (!$order_meds) {
 
-            if(LaravelLocalization::getCurrentLocale() == 'ar') {
-                $message = 'بيانات الطلب الذي تقوم به غير مكتملة.';
-            }
-            else {
-                $message = 'Some Order Data Are Missed.';
-            }
-
-            return ApiResponse::apiSendResponse(400, $message);
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
         }
 
         $order = Order::create([
@@ -52,14 +49,19 @@ class OrderController extends Controller
 
             if (!$medicine) {
 
-                if(LaravelLocalization::getCurrentLocale() == 'ar') {
-                    $message = 'الدواء ذو الرقم' .  $order_med['medicine_id'] . 'غير موجود';
-                }
-                else {
-                    $message = 'Medicine with ID ' . $order_med['medicine_id'] . ' does not exist.';
-                }
+                return ApiResponse::apiSendResponse(
+                    400,
+                    'Medicine with ID ' . $order_med['medicine_id'] . ' does not exist.',
+                    'الدواء ذو الرقم' .  $order_med['medicine_id'] . 'غير موجود'
+                );
+            }
 
-                return ApiResponse::apiSendResponse(400, $message);
+            $default_quantity = $medicine->quantity;
+
+            if($default_quantity < $order_med['quantity']) {
+                $error = true;
+                $ordered_name = $medicine->commercial_name;
+                break;
             }
 
             $medicine_price = $medicine->price;
@@ -73,68 +75,74 @@ class OrderController extends Controller
                 'quantity_price' => $quantity_price,
             ]);
 
+            $medicine->update([
+                'quantity' => $default_quantity - $order_med['quantity'],
+            ]);
+
             $total_price += $quantity_price;
         }
 
         if ($error) {
-            if(isset($addedMedicines)) {
+            if (isset($addedMedicines)) {
                 foreach ($addedMedicines as $addedMedicine) {
+                    if(isset($ordered_name)) {
+                        $reversed_medicine = Medicine::where('id', $addedMedicine->medicine_id)->first();
+                        $reversed_medicine->update([
+                            'quantity' => $reversed_medicine->quantity + $addedMedicine->quantity,
+                        ]);
+                    }
                     $addedMedicine->delete();
                 }
             }
 
             $order->delete();
-
-            if(LaravelLocalization::getCurrentLocale() == 'ar') {
-                $message = 'بيانات الطلب الذي تقوم به غير مكتملة.';
+            if(isset($ordered_name)) {
+                return ApiResponse::apiSendResponse(
+                    200,
+                    'The Quantity You Ordered Of The Medicine '. $ordered_name . ' Is Not Existed.',
+                    'الكمية التي قمت بطلبها من الدواء' . $ordered_name . 'غير موجودة'
+                );
             }
-            else {
-                $message = 'Some Order Data Are Missed.';
-            }
-
-            return ApiResponse::apiSendResponse(400, $message);
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
         }
 
         $order->update([
             'total_price' => $total_price,
         ]);
 
-        if(LaravelLocalization::getCurrentLocale() == 'ar') {
-            $message = 'تمت إضافة الطلب بنجاح';
-        }
-        else {
-            $message = 'Order Has Been Added Successfully';
-        }
-
-        return ApiResponse::apiSendResponse(200, $message, OrderResource::collection(Order::where('user_id', auth()->user()->id)->get()));
+        return ApiResponse::apiSendResponse(
+            200,
+            'Order Has Been Added Successfully',
+            'تمت إضافة الطلب بنجاح',
+            OrderResource::collection(Order::where('user_id', auth()->user()->id)->get())
+        );
     }
 
     public function userOrders(Request $request)
     {
         $user_id = auth()->user()->id;
-        
+
         $orders = Order::where('user_id', $user_id)->get();
         // return $orders;
-        if(count($orders) == 0) {
+        if (count($orders) == 0) {
 
-            if(LaravelLocalization::getCurrentLocale() == 'ar') {
-                $message = 'لا يقم هذا المستخدم بإضافة أي طلبيات';
-            }
-            else {
-                $message = 'There Is No Order For This User.';
-            }
-
-            return ApiResponse::apiSendResponse(200, $message);
+            return ApiResponse::apiSendResponse(
+                200,
+                'There Is No Order For This User.',
+                'لا يقم هذا المستخدم بإضافة أي طلبيات'
+            );
         }
 
-        if(LaravelLocalization::getCurrentLocale() == 'ar') {
-            $message = 'تمت إعادة طلبيات المستخدم بنجاح';
-        }
-        else {
-            $message = 'Orders Has Been Retrieved Successfully';
-        }
-
-        return ApiResponse::apiSendResponse(200,$message , OrderResource::collection($orders));
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Has Been Retrieved Successfully',
+            'تمت إعادة طلبيات المستخدم بنجاح',
+            OrderResource::collection($orders)
+        );
     }
 
     public function orderDetails(Request $request)
@@ -142,24 +150,18 @@ class OrderController extends Controller
         $order = Order::where('id', $request->order_id)->first();
 
         if (!$order) {
-
-            if(LaravelLocalization::getCurrentLocale() == 'ar') {
-                $message = 'بيانات الطلب الذي تقوم به غير مكتملة.';
-            }
-            else {
-                $message = 'Some Order Data Are Missed.';
-            }
-
-            return ApiResponse::apiSendResponse(400, $message);
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Order Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+            );
         }
 
-        if(LaravelLocalization::getCurrentLocale() == 'ar') {
-            $message = 'تمت إعادة الطلب بنجاح';
-        }
-        else {
-            $message = 'Orders Has Been Retrieved Successfully';
-        }
-
-        return ApiResponse::apiSendResponse(200, $message, new OrderMedicineResource($order));
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Has Been Retrieved Successfully',
+            'تمت إعادة الطلب بنجاح',
+            new OrderMedicineResource($order)
+        );
     }
 }
