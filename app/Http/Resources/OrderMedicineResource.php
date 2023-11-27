@@ -21,7 +21,7 @@ class OrderMedicineResource extends JsonResource
             'payed' => $this->payed,
             'total price' => $this->total_price,
             'order date' => $this->order_date,
-            'medicines' => MedicineResource::collection($this->medicines),
+            'medicines' => MedicineForOrderResource::collection($this->medicines),
         ];
     }
 }
