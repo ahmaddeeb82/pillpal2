@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CompanyResource extends JsonResource
+class MedicineWithoutInfoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class CompanyResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'name'=> $this->name,
-        ];
+            'commercial name' => $this->commercial_name,
+        ]; 
     }
 }
