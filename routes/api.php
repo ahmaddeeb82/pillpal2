@@ -28,15 +28,25 @@ Route::middleware('ApiLocalize')->group(function () {
         Route::get('logout', [AuthController::class,'logout']);
     /* ----------------- Order Routes ----------------- */
         Route::group(['prefix'=> 'orders'], function () {
-        Route::post('add', [OrderController::class,'createOrder']);
-        Route::get('list', [OrderController::class,'userOrders']);
-        Route::get('detail', [OrderController::class,'orderDetails']);
-        Route::delete('delete', [OrderController::class,'deleteOrder']);
+            Route::post('add', [OrderController::class,'createOrder']);
+            Route::get('list', [OrderController::class,'userOrders']);
+            Route::get('detail', [OrderController::class,'orderDetails']);
+            Route::delete('delete', [OrderController::class,'deleteOrder']);
         });
         //----------------Company Routes--------------------------
-        Route::get('company',[CompanyController::class,'company']);
-        Route::get('companies',[CompanyController::class,'companies']);
-
+        Route::group(['prefix'=>'companies'],function(){
+            Route::get('detail',[CompanyController::class,'company']);
+            Route::get('list',[CompanyController::class,'companies']);
+            Route::get('home',[CompanyController::class,'companyForHome']);
+        });
+        /* ----------------- Profile Routes ----------------- */
+        Route::group(['prefix'=> 'profile'], function () {
+            Route::post('edit', [ProfileController::class,'editInfo']);
+            Route::get('get', [ProfileController::class,'getInfo']);
+            Route::post('set-image', [ProfileController::class,'setImage']);
+            Route::delete('delete-image', [ProfileController::class,'deleteImage']);
+            Route::post('change-password', [ProfileController::class,'changePassword']);
+        });
     });
 });
 
