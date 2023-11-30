@@ -17,7 +17,7 @@ class MyValidationException extends Exception {
 
     public function render() {
 
-        return ApiResponse::apiSendResponse($this->code, array_values($this->validator->errors()->getMessages())[0][0],$this->validator->errors());
+        return ApiResponse::apiSendResponse($this->code, array_values($this->validator->errors()->getMessages())[0][0],array_values($this->validator->errors()->getMessages())[0][0],$this->validator->errors());
         // return a json with desired format
     }
 }
