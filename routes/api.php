@@ -40,12 +40,12 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::post('set-image', [ProfileController::class,'setImage']);
             Route::delete('delete-image', [ProfileController::class,'deleteImage']);
             Route::post('change-password', [ProfileController::class,'changePassword']);
+            });
             //----------------Company Routes--------------------------
-        Route::group(['prefix'=>'companies'],function(){
+        Route::group(['prefix'=>'companies'],function (){
             Route::get('detail',[CompanyController::class,'company']);
             Route::get('list',[CompanyController::class,'companies']);
             Route::get('home',[CompanyController::class,'companyForHome']);
-        });
         });
     });
 });
