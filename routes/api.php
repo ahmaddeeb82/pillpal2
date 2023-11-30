@@ -33,12 +33,6 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::get('detail', [OrderController::class,'orderDetails']);
             Route::delete('delete', [OrderController::class,'deleteOrder']);
         });
-        //----------------Company Routes--------------------------
-        Route::group(['prefix'=>'companies'],function(){
-            Route::get('detail',[CompanyController::class,'company']);
-            Route::get('list',[CompanyController::class,'companies']);
-            Route::get('home',[CompanyController::class,'companyForHome']);
-        });
         /* ----------------- Profile Routes ----------------- */
         Route::group(['prefix'=> 'profile'], function () {
             Route::post('edit', [ProfileController::class,'editInfo']);
