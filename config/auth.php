@@ -48,6 +48,10 @@ return [
             'driver' => 'passport',
             'provider' => 'admins',
         ],
+        'superadmin' => [
+            'driver' => 'passport',
+            'provider' => 'superadmins',
+        ],
     ],
 
     /*
@@ -75,6 +79,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\ِAdmin::class,
+        ],
+        'superadmins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Superadmin::class,
         ],
 
         // 'users' => [
