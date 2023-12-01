@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -46,6 +47,12 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::get('detail',[CompanyController::class,'company']);
             Route::get('list',[CompanyController::class,'companies']);
             Route::get('home',[CompanyController::class,'companyForHome']);
+        });
+           //-----------------Category Routes---------------------------
+        Route::group(['prefix'=>'categories'],function(){
+            Route::get('detail',[CategoryController::class,'category']);
+            Route::get('list',[CategoryController::class,'allCategories']);
+            Route::get('home',[CategoryController::class,'categoriesForHome']);
         });
     });
 });
