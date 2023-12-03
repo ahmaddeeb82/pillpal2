@@ -13,15 +13,16 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 class CategoryController extends Controller
 {
     public function category(Request $request){
-        $category_id= $request->id;
-        $category= Category::where('id',$category_id)->first();
+        $category_id= $request->category_id;
         if (!$category_id){
-        return ApiResponse::apiSendResponse(
-             400,
-             'Some category Data Are Missed.',
-             'بيانات التصنيف الذي تقوم به غير مكتملة.'
-        );
-       }
+            return ApiResponse::apiSendResponse(
+                 400,
+                 'Some category Data Are Missed.',
+                 'بيانات التصنيف الذي تقوم به غير مكتملة.'
+            );
+           }
+        $category= Category::where('id',$category_id)->first();
+        
         if (!$category){
           return ApiResponse::apiSendResponse(
             200,
@@ -36,7 +37,8 @@ class CategoryController extends Controller
             MedicineWithoutInfoResource::collection($category->medicines ->where('expired',0))
          );
      }
-
+   
+    
 
      public function allCategories(){
         $categories = Category::all();
