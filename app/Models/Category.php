@@ -15,6 +15,6 @@ class Category extends Model
     public $translatable = ['name'];
 
     public function medicines() {
-        return $this->belongsToMany(Medicine::class);
+        return $this->belongsToMany(Medicine::class,'medicine_category');
     }
 }
