@@ -62,7 +62,7 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::post('addfavorite',[MedicineController::class,'addFavorite']);
             Route::get('getfavorite',[MedicineController::class,'userFavorites']);
             Route::post('deletefavorite',[MedicineController::class,'deleteFavorite']);
-        });
+       
        
     });
 });
