@@ -57,12 +57,16 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::get('home',[CategoryController::class,'categoriesForHome']);
         });
         //--------------------Medicine Routes---------------------------
-        Route::group(['prefix'=>'favorite'],function(){
+        Route::group(['prefix'=>'medicines'],function(){
             Route::get('detail',[MedicineController::class,'medicineInfo']);
-            Route::post('addfavorite',[MedicineController::class,'addFavorite']);
-            Route::get('getfavorite',[MedicineController::class,'userFavorites']);
-            Route::post('deletefavorite',[MedicineController::class,'deleteFavorite']);
-       
+        });
+        //--------------------Favorite Routes----------------------------
+        Route::group(['prefix'=>'favorite'],function(){
+            Route::post('add',[MedicineController::class,'addFavorite']);
+            Route::get('get',[MedicineController::class,'userFavorites']);
+            Route::post('delete',[MedicineController::class,'deleteFavorite']);
+        });
+            
        
     });
 });
