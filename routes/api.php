@@ -3,11 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use PhpParser\Node\Stmt\Return_;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,14 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::get('list',[CategoryController::class,'allCategories']);
             Route::get('home',[CategoryController::class,'categoriesForHome']);
         });
+        //--------------------Medicine Routes---------------------------
+        Route::group(['prefix'=>'favorite'],function(){
+            Route::get('detail',[MedicineController::class,'medicineInfo']);
+            Route::post('addfavorite',[MedicineController::class,'addFavorite']);
+            Route::get('getfavorite',[MedicineController::class,'userFavorites']);
+            Route::post('deletefavorite',[MedicineController::class,'deleteFavorite']);
+        });
+       
     });
 });
 
