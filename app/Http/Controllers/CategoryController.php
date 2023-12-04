@@ -42,7 +42,7 @@ class CategoryController extends Controller
 
      public function allCategories(){
         $categories = Category::all();
-        if (!$categories){
+        if (count($categories)==0){
              return ApiResponse::apiSendResponse(
                 200,
                 'There are no categories',
@@ -60,7 +60,7 @@ class CategoryController extends Controller
 
     public function categoriesForHome(Request $request){
         $categoriesHome = Category::take(4)->get();
-        if (!$categoriesHome){
+        if (count($categoriesHome)==0){
              return ApiResponse::apiSendResponse(
                 200,
                 'There are no categories',
