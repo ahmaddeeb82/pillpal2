@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Category;
+use App\Models\Medicine;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\MedicineResource;
 use App\Http\Resources\MedicineWithoutInfoResource;
-use App\Models\Medicine;
-use App\Models\User;
-use Illuminate\Http\Request;
 
 class MedicineController extends Controller
 {
@@ -25,7 +28,7 @@ class MedicineController extends Controller
                 200,
                 'medicine data Has Been Retrieved Successfully',
                 'تمت إعادة بيانات الدواء بنجاح',
-                new MedicineResource($medicine)
+                 MedicineResource::collection($medicine)
             );
         }
         return ApiResponse::apiSendResponse(
@@ -95,6 +98,37 @@ class MedicineController extends Controller
             200,
             'Medicine Has Been Deleted from favorite Successfully',
             'تم حذف الدواء من المفضلة بنجاح'
+        );
+    }
+
+
+
+
+    public function searchByName(Request $request){
+        $seach = $request->input('search');
+        if (!$seach){
+            return ApiResponse::apiSendResponse(
+                400,
+                'You must enter something to search for',
+                'يجب ادخال شيء للبحث عنه'
+            );
+        }
+        $results = Medicine::where('scientific_name','like','%'.$seach.'%')->get();
+        $results2 = Category::where('name','like','%'.$seach.'%')->get();
+        if (count($results)==0 && count($results2)==0){
+            return ApiResponse::apiSendResponse(
+                200,
+                'The item you are looking for is not found',
+                'لم يتم العثور على العنصر الذي تبحث عنه'
+            );
+        }
+        $finalresults[] = MedicineWithoutInfoResource::collection($results);
+        $finalresults[] = CategoryResource::collection($results2);
+        return ApiResponse::apiSendResponse(
+            200,
+            'The data you searched for was successfully returned',
+            'تم إرجاع البيانات التي بحثت عنها بنجاح',
+            $finalresults
         );
     }
 }
