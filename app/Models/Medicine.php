@@ -12,7 +12,7 @@ class Medicine extends Model
     protected $fillable = ['scientific_name', 'commercial_name','quantity','expiration_date','price','company_id','expired','image'];
 
     public function categories(){
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class,'medicine_category');
     }
 
     public function company(){
