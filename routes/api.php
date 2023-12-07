@@ -66,7 +66,8 @@ Route::middleware('ApiLocalize')->group(function () {
             Route::get('get',[MedicineController::class,'userFavorites']);
             Route::post('delete',[MedicineController::class,'deleteFavorite']);
         });
-            
+        //---------------------Search Route--------------------------------
+        Route::get('search',[MedicineController::class,'searchByName']) ;   
        
     });
 });
