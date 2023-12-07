@@ -17,6 +17,7 @@ class MedicineWithoutInfoResource extends JsonResource
         return [
             'id'=>$this->id,
             'commercial name' => $this->commercial_name,
+            'image' =>$this->image
         ]; 
     }
 }
