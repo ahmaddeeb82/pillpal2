@@ -21,7 +21,9 @@ class MedicineResource extends JsonResource
             'quantity' => $this->quantity,
             'price' => $this->price,
             'expiration date' => $this->expiration_date,
-            'expired' => $this->expired,
+            'company' => new CompanyResource($this->company),
+            'category' => CategoryResource::collection($this->categories),
+            'image' =>$this->image
         ];
     }
 }
