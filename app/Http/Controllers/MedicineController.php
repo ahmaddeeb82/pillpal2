@@ -16,7 +16,7 @@ class MedicineController extends Controller
 {
     public function medicineInfo(Request $request){
         if (!($request -> expired)){
-            $medicine = Medicine::where('id' ,$request->input('medicine_id'))->first();
+            $medicine = Medicine::where('id' ,$request->input('medicine_id'))->get();
             if (!$medicine){
                 return ApiResponse::apiSendResponse(
                     400,
@@ -118,8 +118,8 @@ class MedicineController extends Controller
         if (count($results)==0 && count($results2)==0){
             return ApiResponse::apiSendResponse(
                 200,
-                'The item you are looking for is not found',
-                'لم يتم العثور على العنصر الذي تبحث عنه'
+                'This item was not found',
+                'لم يتم العثور على هذا العنصر'
             );
         }
         $finalresults[] = MedicineWithoutInfoResource::collection($results);
