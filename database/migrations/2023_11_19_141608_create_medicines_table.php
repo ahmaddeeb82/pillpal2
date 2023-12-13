@@ -20,7 +20,8 @@ return new class extends Migration
             $table->date('expiration_date');
             $table->boolean('expired')->default(false);
             $table->string('image')->nullable();
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('company_id')->constrained();
+            $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

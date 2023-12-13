@@ -13,6 +13,14 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 class CategoryController extends Controller
 {
     public function category(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some category Data Are Missed.',
+                'بيانات التصنيف الذي تقوم به غير مكتملة.'
+           );
+        }
         $category_id= $request->category_id;
         if (!$category_id){
             return ApiResponse::apiSendResponse(
@@ -21,7 +29,7 @@ class CategoryController extends Controller
                  'بيانات التصنيف الذي تقوم به غير مكتملة.'
             );
            }
-        $category= Category::where('id',$category_id)->first();
+        $category= Category::where('id',$category_id)->where('admin_id', $admin_id)->first();
         
         if (!$category){
           return ApiResponse::apiSendResponse(
@@ -40,8 +48,16 @@ class CategoryController extends Controller
    
     
 
-     public function allCategories(){
-        $categories = Category::all();
+     public function allCategories(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        $categories = Category::where('admin_id', $admin_id)->get();
         if (count($categories)==0){
              return ApiResponse::apiSendResponse(
                 200,
@@ -59,7 +75,15 @@ class CategoryController extends Controller
 
 
     public function categoriesForHome(Request $request){
-        $categoriesHome = Category::take(4)->get();
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        $categoriesHome = Category::where('admin_id', $admin_id)->take(4)->get();
         if (count($categoriesHome)==0){
              return ApiResponse::apiSendResponse(
                 200,
@@ -73,6 +97,5 @@ class CategoryController extends Controller
             'تمت إعادة التصنيفات بنجاح',
             CategoryResource::collection($categoriesHome)
         );
-
     }
 }

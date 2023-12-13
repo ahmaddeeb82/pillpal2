@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

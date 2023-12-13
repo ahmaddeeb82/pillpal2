@@ -17,7 +17,8 @@ class FavoriteFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'medicine_id' => fake()->numberBetween(1,9),
+            'user_id' => 1
         ];
     }
 }

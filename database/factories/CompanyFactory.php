@@ -18,6 +18,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'admin_id' => fake()->numberBetween(1,2),
         ];
     }
 }

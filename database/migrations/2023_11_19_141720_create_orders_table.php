@@ -17,6 +17,7 @@ return new class extends Migration
             $table->double('total_price')->nullable();
             $table->boolean('payed')->default(false);
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
             $table->date('order_date');
             $table->timestamps();
         });

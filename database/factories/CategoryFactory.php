@@ -20,6 +20,7 @@ class CategoryFactory extends Factory
                 'name' => [
                     'en' => fake()->name(),
                     'ar'=> fake()->name()],
+                    'admin_id' => fake()->numberBetween(1,2),
             ];
     }
 }

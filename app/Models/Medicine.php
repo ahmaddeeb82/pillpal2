@@ -9,7 +9,7 @@ class Medicine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['scientific_name', 'commercial_name','quantity','expiration_date','price','company_id','expired','image'];
+    protected $fillable = ['scientific_name', 'commercial_name','quantity','expiration_date','price','company_id','expired','image', 'admin_id'];
 
     public function categories(){
         return $this->belongsToMany(Category::class,'medicine_category');
@@ -25,5 +25,9 @@ class Medicine extends Model
 
     public function orders(){
         return $this->belongsToMany(Order::class)->withPivot('quantity', 'quantity_price');
+    }
+
+    public function admin() {
+        return $this->belongsTo(Admin::class);
     }
 }

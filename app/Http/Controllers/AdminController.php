@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Http\Requests\AuthLoginRequest;
+use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Resources\AuthResource;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -49,5 +52,27 @@ class AdminController extends Controller
         );
     }
 
+
+    public function addAdmin(AuthRegisterRequest $request) {
+
+        $credentials = $request->validated();
+
+        data_forget($credentials, 'confirm_password');
+
+        $credentials['password'] = Hash::make($credentials['password']);
+
+        $user = Admin::create($credentials);
+
+        $data['token'] = $user->createToken('testProject')->accessToken;
+
+        $data['id'] = $user->id;
+
+        return ApiResponse::apiSendResponse(
+            201,
+            'User informations has been successfully registered.',
+            'تم تسجيل بيانات المستخدم بنجاح',
+            new AuthResource($data)
+        );
+    }
 
 }

@@ -13,8 +13,16 @@ use App\Http\Resources\MedicineWithoutInfoResource;
 class CompanyController extends Controller
 {
     public function company(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
         $company_id = $request->company_id;
-        $company = Company::find($request->company_id);
+        $company = Company::where('admin_id', $admin_id)->find($request->company_id);
         if (!$company_id){      
              return ApiResponse::apiSendResponse(
                 400,
@@ -39,8 +47,16 @@ class CompanyController extends Controller
         );
     }
 
-    public function Companies(){
-        $companies = Company::all();
+    public function Companies(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        $companies = Company::where('admin_id', $admin_id)->get();
         if (!$companies){
              return ApiResponse::apiSendResponse(
                 200,
@@ -57,7 +73,15 @@ class CompanyController extends Controller
         );
     }
     public function companyForHome(Request $request){
-        $companyHome = Company::take(4)->get();
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        $companyHome = Company::where('admin_id', $admin_id)->take(4)->get();
         if (!$companyHome){
              return ApiResponse::apiSendResponse(
                 200,

@@ -13,7 +13,34 @@ class Admin extends Authenticatable
 
     protected $guard = 'admin';
 
-    protected $fillable = ['first_name','last_name','phone','password'];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'phone',
+        'password',
+        'address',
+        'image',   
+    ];
 
     protected $hidden = ['password'];
+
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    public function medicines() {
+        return $this->hasMany(Medicine::class);
+    }
+
+    public function categories() {
+        return $this->hasMany(Category::class);
+    }
+
+    public function caompanies() {
+        return $this->hasMany(Company::class);
+    }
 }

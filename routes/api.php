@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StorehouseController;
 use App\Http\Controllers\UserController;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Stmt\Return_;
@@ -68,7 +71,13 @@ Route::middleware('ApiLocalize')->group(function () {
         });
         //---------------------Search Route--------------------------------
         Route::get('search',[MedicineController::class,'searchByName']) ;   
+        //---------------------Storehouse Route--------------------------------
+        Route::get('storehouses', [StorehouseController::class,'storehouses']);
        
     });
+});
+
+Route::group(['prefix'=> 'admin'],function(){
+    Route::post('add',[AdminController::class,'addAdmin']);
 });
 

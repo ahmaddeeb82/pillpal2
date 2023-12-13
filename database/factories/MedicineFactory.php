@@ -24,6 +24,7 @@ class MedicineFactory extends Factory
             'expiration_date' => fake()->date(),
             'image' => fake()->name(),
             'company_id' => fake()->numberBetween(1,3),
+            'admin_id' => fake()->numberBetween(1,2),
         ];
     }
 }

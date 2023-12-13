@@ -2,18 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Admin;
-use App\Models\Favorite;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class FavoriteSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Favorite::factory(3)->create();
+        
     }
 }

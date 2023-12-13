@@ -15,8 +15,16 @@ use App\Http\Resources\MedicineWithoutInfoResource;
 class MedicineController extends Controller
 {
     public function medicineInfo(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
         if (!($request -> expired)){
-            $medicine = Medicine::where('id' ,$request->input('medicine_id'))->get();
+            $medicine = Medicine::where('id' ,$request->input('medicine_id'))->where('admin_id', $admin_id)->get();
             if (!$medicine){
                 return ApiResponse::apiSendResponse(
                     400,
@@ -63,9 +71,17 @@ class MedicineController extends Controller
 
 
     
-    public function userFavorites(){
+    public function userFavorites(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
         $user = auth()->user();
-        if (count($user->medicines)==0){
+        if (count($user->medicines->where('admin_id', $admin_id))==0){
             return ApiResponse::apiSendResponse(
                 200,
                 'There are no favorite medications',
@@ -76,7 +92,7 @@ class MedicineController extends Controller
             200,
             'Favorite data has been Retrieved successfully',
             'تمت اعادة البيانات المفضلة بنجاح',
-            MedicineWithoutInfoResource::collection($user->medicines)
+            MedicineWithoutInfoResource::collection($user->medicines->where('admin_id', $admin_id))
         );
     }
 
@@ -105,6 +121,14 @@ class MedicineController extends Controller
 
 
     public function searchByName(Request $request){
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
         $seach = $request->input('search');
         if (!$seach){
             return ApiResponse::apiSendResponse(
@@ -113,8 +137,8 @@ class MedicineController extends Controller
                 'يجب ادخال شيء للبحث عنه'
             );
         }
-        $results = Medicine::where('scientific_name','like','%'.$seach.'%')->get();
-        $results2 = Category::where('name','like','%'.$seach.'%')->get();
+        $results = Medicine::where('scientific_name','like','%'.$seach.'%')->where('admin_id', $admin_id)->get();
+        $results2 = Category::where('name','like','%'.$seach.'%')->where('admin_id', $admin_id)->get();
         if (count($results)==0 && count($results2)==0){
             return ApiResponse::apiSendResponse(
                 200,

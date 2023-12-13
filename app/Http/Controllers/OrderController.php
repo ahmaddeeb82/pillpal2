@@ -19,7 +19,14 @@ class OrderController extends Controller
 {
     public function createOrder(Request $request)
     {
-
+        $admin_id = $request->header('Str');
+        if(!$admin_id) {
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
         $order_meds = $request->all();
 
         if (!$order_meds) {
@@ -34,6 +41,7 @@ class OrderController extends Controller
         $order = Order::create([
             'user_id' => auth()->user()->id,
             'order_date' => Carbon::now()->toDateString(),
+            'admin_id' => $admin_id,
         ]);
 
         $total_price = 0;
