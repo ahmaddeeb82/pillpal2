@@ -27,7 +27,8 @@ class OrderController extends Controller
                 'بيانات الطلب الذي تقوم به غير مكتملة.'
            );
         }
-        $order_meds = $request->all();
+        $order_meds1 = $request->all();
+        $order_meds = $order_meds1['order'];
 
         if (!$order_meds) {
 
@@ -126,8 +127,7 @@ class OrderController extends Controller
         return ApiResponse::apiSendResponse(
             200,
             'Order Has Been Added Successfully',
-            'تمت إضافة الطلب بنجاح',
-            OrderResource::collection(Order::where('user_id', auth()->user()->id)->get())
+            'تمت إضافة الطلب بنجاح'
         );
     }
 

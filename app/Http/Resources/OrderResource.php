@@ -22,7 +22,7 @@ class OrderResource extends JsonResource
             'payed' => $this->payed,
             'total price' => $this->total_price,
             'order date' => $this->order_date,
-            'storehouse' => Admin::where('id', $this->order_id)->first()->first_name,
+            'storehouse' => Admin::where('id', $this->admin_id)->first()->first_name,
         ];
     }
 }
