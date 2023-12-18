@@ -67,7 +67,7 @@ Route::middleware('ApiLocalize')->group(function () {
         Route::group(['prefix'=>'favorite'],function(){
             Route::post('add',[MedicineController::class,'addFavorite']);
             Route::get('get',[MedicineController::class,'userFavorites']);
-            Route::post('delete',[MedicineController::class,'deleteFavorite']);
+            Route::delete('delete',[MedicineController::class,'deleteFavorite']);
         });
         //---------------------Search Route--------------------------------
         Route::get('search',[MedicineController::class,'searchByName']) ;   
