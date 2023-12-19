@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Dashboard\AdminOrderController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -81,6 +82,14 @@ Route::group(['prefix'=> 'admin'],function(){
     Route::post('login', [AdminController::class, 'login']);
     Route::middleware('auth:admin')->group(function () {
         Route::get('logout', [AdminController::class,'logout']);
+        /* ----------------- Order Routes ----------------- */
+        Route::group(['prefix' => 'orders'], function() {
+            Route::get('list', [AdminOrderController::class, 'adminOrders']);
+            Route::get('detail', [AdminOrderController::class,'orderDetails']);
+            Route::put('status', [AdminOrderController::class,'updateStatus']);
+            Route::put('payment', [AdminOrderController::class,'updatePayment']);
+        });
+        
     });
 });
 //---------------------SuperAdmins Route--------------------------------
