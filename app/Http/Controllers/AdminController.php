@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Resources\AuthResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
-use App\Http\Resources\AuthResource;
-use App\Models\Admin;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     public function login(AuthLoginRequest $request) {
         $credentials = $request->validated();
 
-        if (auth()->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
-            $data['token'] = auth()->user()->createToken('testProject')->accessToken;
-            $data['id'] = auth()->user()->id;
+        if (auth()->guard('admin_ses')->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
+            $data['token'] = auth()->guard('admin_ses')->user()->createToken('testProject')->accessToken;
+            $data['id'] = auth()->guard('admin_ses')->user()->id;
             return ApiResponse::apiSendResponse(
                 200,
                 'User is logged in successfully!',
@@ -52,6 +53,27 @@ class AdminController extends Controller
         );
     }
 
+    public function superLogin(AuthLoginRequest $request) {
+        $credentials = $request->validated();
+
+        if (auth()->guard('superadmin_ses')->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
+            $data['token'] = auth()->guard('superadmin_ses')->user()->createToken('testProject')->accessToken;
+            $data['id'] = auth()->guard('superadmin_ses')->user()->id;
+            return ApiResponse::apiSendResponse(
+                200,
+                'User is logged in successfully!',
+                'تم تسجيل الدخول بنجاح',
+                new AuthResource($data)
+            );
+        } else {
+            return ApiResponse::apiSendResponse(
+                401,
+                'Please Check Sign in Information And Try Again.',
+                'الرجاء التحقق من معلومات تسجيل الدخول والمحاولة مرة أخرى'
+            );
+        }
+    }
+
 
     public function addAdmin(AuthRegisterRequest $request) {
 
@@ -74,5 +96,4 @@ class AdminController extends Controller
             new AuthResource($data)
         );
     }
-
 }

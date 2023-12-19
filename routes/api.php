@@ -76,8 +76,19 @@ Route::middleware('ApiLocalize')->group(function () {
        
     });
 });
-
+//---------------------Admin Routes--------------------------------
 Route::group(['prefix'=> 'admin'],function(){
-    Route::post('add',[AdminController::class,'addAdmin']);
+    Route::post('login', [AdminController::class, 'login']);
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('logout', [AdminController::class,'logout']);
+    });
+});
+//---------------------SuperAdmins Route--------------------------------
+Route::group(['prefix'=> 'superadmin'],function(){
+    Route::post('login', [AdminController::class, 'superLogin']);
+    Route::middleware('auth:superadmin')->group(function () {
+        Route::post('add',[AdminController::class,'addAdmin']);
+        Route::get('logout', [AdminController::class,'logout']);
+    });
 });
 

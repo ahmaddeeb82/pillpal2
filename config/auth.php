@@ -44,9 +44,17 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'admin_ses' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
         'admin' => [
             'driver' => 'passport',
             'provider' => 'admins',
+        ],
+        'superadmin_ses' => [
+            'driver' => 'session',
+            'provider' => 'superadmins',
         ],
         'superadmin' => [
             'driver' => 'passport',
@@ -78,7 +86,7 @@ return [
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\ِAdmin::class,
+            'model' => App\Models\Admin::class,
         ],
         'superadmins' => [
             'driver' => 'eloquent',
