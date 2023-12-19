@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderReset;
 use App\Helpers\ApiResponse;
 use App\Http\Resources\OrderMedicineResource;
 use App\Http\Resources\OrderResource;
@@ -10,6 +11,7 @@ use App\Models\MedicineOrder;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -39,6 +41,7 @@ class OrderController extends Controller
             );
         }
 
+        DB::beginTransaction();
         $order = Order::create([
             'user_id' => auth()->user()->id,
             'order_date' => Carbon::now()->toDateString(),
@@ -58,7 +61,8 @@ class OrderController extends Controller
             $medicine = Medicine::where('id', $order_med['medicine_id'])->first();
 
             if (!$medicine) {
-
+                DB::rollBack();
+                event(new OrderReset());
                 return ApiResponse::apiSendResponse(
                     400,
                     'Medicine with ID ' . $order_med['medicine_id'] . ' does not exist.',
@@ -93,19 +97,8 @@ class OrderController extends Controller
         }
 
         if ($error) {
-            if (isset($addedMedicines)) {
-                foreach ($addedMedicines as $addedMedicine) {
-                    if(isset($ordered_name)) {
-                        $reversed_medicine = Medicine::where('id', $addedMedicine->medicine_id)->first();
-                        $reversed_medicine->update([
-                            'quantity' => $reversed_medicine->quantity + $addedMedicine->quantity,
-                        ]);
-                    }
-                    $addedMedicine->delete();
-                }
-            }
-
-            $order->delete();
+            DB::rollBack();
+            event(new OrderReset());
             if(isset($ordered_name)) {
                 return ApiResponse::apiSendResponse(
                     200,
@@ -123,7 +116,7 @@ class OrderController extends Controller
         $order->update([
             'total_price' => $total_price,
         ]);
-
+        DB::commit();
         return ApiResponse::apiSendResponse(
             200,
             'Order Has Been Added Successfully',
