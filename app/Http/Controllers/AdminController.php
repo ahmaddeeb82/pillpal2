@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\AdminRgisterRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\AuthResource;
 use Illuminate\Support\Facades\Auth;
@@ -75,7 +76,7 @@ class AdminController extends Controller
     }
 
 
-    public function addAdmin(AuthRegisterRequest $request) {
+    public function addAdmin(AdminRgisterRequest $request) {
 
         $credentials = $request->validated();
 
