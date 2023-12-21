@@ -93,6 +93,7 @@ Route::group(['prefix'=> 'admin'],function(){
 
         Route::group(['prefix' => 'companies'], function() {
             Route::post('add', [AdminCompanyController::class, 'addCompany']);
+            Route::post('show', [AdminCompanyController::class, 'showCompanies']);
         });
         
     });

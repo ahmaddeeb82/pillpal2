@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use App\Exceptions\MyValidationException;
+use Illuminate\Validation\Rule;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class CompnayRequest extends FormRequest
@@ -33,7 +34,7 @@ class CompnayRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => ['required', Rule::unique('companies')->where(function($query) {return $query->where('admin_id', $this->user()->id);})]
         ];
     }
         
@@ -56,7 +57,7 @@ class CompnayRequest extends FormRequest
     {
         if(LaravelLocalization::getCurrentLocale() == 'ar') {
             return [
-                'name.required' => 'الرجاء إدخال :attribute'
+                'name.required' => 'الرجاء إدخال :attribute',
             ];
         }
         else {
