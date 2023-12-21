@@ -11,11 +11,61 @@ use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
-    public function adminOrders(Request $request)
+    public function adminInPreparationOrders(Request $request)
     {
         $admin_id = auth()->guard('admin')->user()->id;
 
-        $orders = Order::where('admin_id', $admin_id)->get();
+        $orders = Order::where('admin_id', $admin_id)->where('status', 'in_preparation')->get();
+
+
+        if (count($orders) == 0) {
+
+            return ApiResponse::apiSendResponse(
+                200,
+                'There Is No Order In This Storehouse.',
+                'لا يوجد لدى هذا المستوع أي طلبات.'
+            );
+        }
+
+
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Has Been Retrieved Successfully',
+            'تمت إعادة طلبيات المستودع بنجاح',
+            OrderResource::collection($orders)
+        );
+    }
+
+    public function adminSentOrders(Request $request)
+    {
+        $admin_id = auth()->guard('admin')->user()->id;
+
+        $orders = Order::where('admin_id', $admin_id)->where('status', 'sent')->get();
+
+
+        if (count($orders) == 0) {
+
+            return ApiResponse::apiSendResponse(
+                200,
+                'There Is No Order In This Storehouse.',
+                'لا يوجد لدى هذا المستوع أي طلبات.'
+            );
+        }
+
+
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Has Been Retrieved Successfully',
+            'تمت إعادة طلبيات المستودع بنجاح',
+            OrderResource::collection($orders)
+        );
+    }
+
+    public function adminDeliveredOrders(Request $request)
+    {
+        $admin_id = auth()->guard('admin')->user()->id;
+
+        $orders = Order::where('admin_id', $admin_id)->where('status', 'delivered')->get();
 
 
         if (count($orders) == 0) {
@@ -167,6 +217,28 @@ class AdminOrderController extends Controller
             'Orders In Preparation Number Has Been Retrieved Successfully!',
             'تم إعادة عدد الطلبات قيد التحضير بنجاح',
             ['Status' => 'In Preaparation', 'Count' => $orders_count]
+        );
+    }
+
+    public function sentCounter() {
+        $admin_id = auth()->guard('admin')->user()->id;
+        $orders_count = count(Order::where('status', 'sent')->where('admin_id', $admin_id)->get());
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Sent Number Has Been Retrieved Successfully!',
+            'تم إعادة عدد الطلبات المرسلة بنجاح',
+            ['Status' => 'Sent', 'Count' => $orders_count]
+        );
+    }
+
+    public function deliveredCounter() {
+        $admin_id = auth()->guard('admin')->user()->id;
+        $orders_count = count(Order::where('status', 'delivered')->where('admin_id', $admin_id)->get());
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Delivered Number Has Been Retrieved Successfully!',
+            'تم إعادة عدد الطلبات المستلمة بنجاح',
+            ['Status' => 'Delivered', 'Count' => $orders_count]
         );
     }
 }

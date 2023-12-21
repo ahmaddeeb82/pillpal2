@@ -86,11 +86,15 @@ Route::group(['prefix'=> 'admin'],function(){
         Route::get('logout', [AdminController::class,'logout']);
         /* ----------------- Order Routes ----------------- */
         Route::group(['prefix' => 'orders'], function() {
-            Route::get('list', [AdminOrderController::class, 'adminOrders']);
+            Route::get('list-in-preparation', [AdminOrderController::class, 'adminInPreparationOrders']);
+            Route::get('list-sent', [AdminOrderController::class, 'adminSentOrders']);
+            Route::get('list-delivered', [AdminOrderController::class, 'adminDeliveredOrders']);
             Route::get('detail', [AdminOrderController::class,'orderDetails']);
             Route::put('status', [AdminOrderController::class,'updateStatus']);
             Route::put('payment', [AdminOrderController::class,'updatePayment']);
             Route::get('in-preparation', [AdminOrderController::class,'inPreparationCounter']);
+            Route::get('sent', [AdminOrderController::class,'sentCounter']);
+            Route::get('delivered', [AdminOrderController::class,'deliveredCounter']);
         });
 
         Route::group(['prefix' => 'companies'], function() {
