@@ -158,4 +158,15 @@ class AdminOrderController extends Controller
             );
         }
     }
+
+    public function inPreparationCounter() {
+        $admin_id = auth()->guard('admin')->user()->id;
+        $orders_count = count(Order::where('status', 'in_preparation')->where('admin_id', $admin_id)->get());
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders In Preparation Number Has Been Retrieved Successfully!',
+            'تم إعادة عدد الطلبات قيد التحضير بنجاح',
+            ['Status' => 'In Preaparation', 'Count' => $orders_count]
+        );
+    }
 }
