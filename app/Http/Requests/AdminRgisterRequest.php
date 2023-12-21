@@ -32,17 +32,7 @@ class AdminRgisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        if(auth()->check()) {
-            return [
-                'first_name' => 'required',
-                'last_name'=> 'required',
-                'phone' => 'required|unique:users,phone,'.auth()->guard('admin')->user()->id.'|phone:INTERNATIONAL',
-                'address'=> 'required',
-                'password' => 'required|min:6',
-                'confirm_password' => 'required|same:password',
-            ];
-        }
-        else {
+        
             return [
                 'first_name' => 'required',
                 'last_name'=> 'required',
@@ -51,7 +41,6 @@ class AdminRgisterRequest extends FormRequest
                 'password' => 'required|min:6',
                 'confirm_password' => 'required|same:password',
             ];
-        }
         
     }
 

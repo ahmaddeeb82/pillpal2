@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Dashboard\AdminCompanyController;
 use App\Http\Controllers\Dashboard\AdminOrderController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\OrderController;
@@ -88,6 +89,10 @@ Route::group(['prefix'=> 'admin'],function(){
             Route::get('detail', [AdminOrderController::class,'orderDetails']);
             Route::put('status', [AdminOrderController::class,'updateStatus']);
             Route::put('payment', [AdminOrderController::class,'updatePayment']);
+        });
+
+        Route::group(['prefix' => 'companies'], function() {
+            Route::post('add', [AdminCompanyController::class, 'addCompany']);
         });
         
     });
