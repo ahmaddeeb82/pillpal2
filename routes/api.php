@@ -90,6 +90,7 @@ Route::group(['prefix'=> 'admin'],function(){
             Route::get('detail', [AdminOrderController::class,'orderDetails']);
             Route::put('status', [AdminOrderController::class,'updateStatus']);
             Route::put('payment', [AdminOrderController::class,'updatePayment']);
+            Route::get('in-preparation', [AdminOrderController::class,'inPreparationCounter']);
         });
 
         Route::group(['prefix' => 'companies'], function() {
