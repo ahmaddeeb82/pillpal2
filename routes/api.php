@@ -79,6 +79,7 @@ Route::middleware('ApiLocalize')->group(function () {
     });
 });
 //---------------------Admin Routes--------------------------------
+Route::middleware('ApiLocalize')->group(function () {
 Route::group(['prefix'=> 'admin'],function(){
     Route::post('login', [AdminController::class, 'login']);
     Route::middleware('auth:admin')->group(function () {
@@ -93,10 +94,11 @@ Route::group(['prefix'=> 'admin'],function(){
 
         Route::group(['prefix' => 'companies'], function() {
             Route::post('add', [AdminCompanyController::class, 'addCompany']);
-            Route::post('show', [AdminCompanyController::class, 'showCompanies']);
+            Route::get('show', [AdminCompanyController::class, 'showCompanies']);
         });
         
     });
+});
 });
 //---------------------SuperAdmins Route--------------------------------
 Route::group(['prefix'=> 'superadmin'],function(){
