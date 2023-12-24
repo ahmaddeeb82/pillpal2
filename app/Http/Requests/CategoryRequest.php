@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use App\Exceptions\MyValidationException;
+use App\Rules\CategoryArUnique;
+use App\Rules\CategoryEnUnique;
 use Illuminate\Validation\Rule;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -35,11 +37,10 @@ class CategoryRequest extends FormRequest
     {
         // ['required', Rule::unique('categories')->where(function($query) {return $query->where('admin_id', $this->user()->id);})]
         return [
-            'name'=>[
-                 'en' => 'required', 
-                 'ar' => 'required',],
-            //'image' => 'required|mimes:png,jpg,jpeg',
-            'image' =>'required'
+            'name_en' => ['required', new CategoryEnUnique($this->user()->id)],
+            'name_ar' => ['required', new CategoryArUnique($this->user()->id)],
+            'image' => 'required|mimes:png,jpg,jpeg',
+            //'image' =>'required'
         ];
     }
         
@@ -48,13 +49,15 @@ class CategoryRequest extends FormRequest
     {
         if(LaravelLocalization::getCurrentLocale() == 'ar') {
             return [
-                'name' =>'الاسم',
+                'name_en' =>'الاسم الانكليزي',
+                'name_ar' =>'الاسم العربي',
                 'image' => 'الصورة',
             ];
         }
         else {
             return [
-                'name' => ' name en',
+                'name_en' => ' Eglish Name',
+                'name_ar' => ' Arabic Name',
                 'image' => 'Image'
             ];
         }
@@ -64,13 +67,15 @@ class CategoryRequest extends FormRequest
     {
         if(LaravelLocalization::getCurrentLocale() == 'ar') {
             return [
-                'name.required' =>'الرجاء إدخال :attribute',
+                'name_en.required' =>'الرجاء إدخال :attribute',
+                'name_ar.required' =>'الرجاء إدخال :attribute',
                 'image.required' => 'الرجاء إدخال :attribute'
             ];
         }
         else {
             return [
-                'name.required' =>'Please Enter :attribute',
+                'name_en.required' =>'Please Enter :attribute',
+                'name_ar.required' =>'Please Enter :attribute',
                 'image.required' => 'Please Enter :attribute',
             ];
         }
