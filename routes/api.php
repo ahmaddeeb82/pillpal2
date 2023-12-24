@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Dashboard\AdminCategoryController;
 use App\Http\Controllers\Dashboard\AdminCompanyController;
 use App\Http\Controllers\Dashboard\AdminOrderController;
 use App\Http\Controllers\MedicineController;
@@ -96,12 +97,17 @@ Route::group(['prefix'=> 'admin'],function(){
             Route::get('sent', [AdminOrderController::class,'sentCounter']);
             Route::get('delivered', [AdminOrderController::class,'deliveredCounter']);
         });
-
+        //--------------------Companies Routes-------------------------------
         Route::group(['prefix' => 'companies'], function() {
             Route::post('add', [AdminCompanyController::class, 'addCompany']);
             Route::get('show', [AdminCompanyController::class, 'showCompanies']);
+            Route::post('edit', [AdminCompanyController::class, 'editCompanyName']);
         });
-        
+        //---------------------Categories Routes---------------------------------------
+        Route::group(['prefix' => 'categories'], function() {
+            Route::post('add', [AdminCategoryController::class, 'addCategory']);
+            Route::get('show', [AdminCategoryController::class, 'showCategories']);
+        });
     });
 });
 });
