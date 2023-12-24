@@ -24,6 +24,7 @@ class AdminCompanyController extends Controller
             'تمت إضافة الشركة بنجاح'
         );
     }
+
     public function showCompanies(){
         $admin_id = auth()->guard('admin')->user()->id;
         $companies = Company::where('admin_id', $admin_id)->get();
@@ -34,11 +35,35 @@ class AdminCompanyController extends Controller
                 'لا يوجد شركات'
             );
         }
+        
         return ApiResponse::apiSendResponse(
             200,
             'Companies data has been Retrieved successfully',
             'تم اعادة الشركات بنجاح',
             CompanyResource::collection($companies)
+        );
+    }
+
+    public function editCompanyName(CompnayRequest $request){
+        $admin_id = auth()->guard('admin')->user()->id;
+        $companies = Company::where('admin_id', $admin_id)->get();
+        $company_id = $request->input('company_id');
+        $new_name = $request->input('name');
+
+        if(!$new_name || !$company_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        $company = $companies-> find($company_id);
+        $company ->update(['name'=> $new_name]);
+
+        return ApiResponse::apiSendResponse(
+            200,
+            'company name has been successfully edited.',
+            'تم تعديل اسم الشركة بنجاح'
         );
     }
 }
