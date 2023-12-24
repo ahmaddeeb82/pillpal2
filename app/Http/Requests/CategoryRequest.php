@@ -33,9 +33,13 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // ['required', Rule::unique('categories')->where(function($query) {return $query->where('admin_id', $this->user()->id);})]
         return [
-            'name' => ['required', Rule::unique('companies')->where(function($query) {return $query->where('admin_id', $this->user()->id);})],
-            'image' => 'required',
+            'name'=>[
+                 'en' => 'required', 
+                 'ar' => 'required',],
+            //'image' => 'required|mimes:png,jpg,jpeg',
+            'image' =>'required'
         ];
     }
         
@@ -44,13 +48,13 @@ class CategoryRequest extends FormRequest
     {
         if(LaravelLocalization::getCurrentLocale() == 'ar') {
             return [
-                'name' => 'الاسم',
+                'name' =>'الاسم',
                 'image' => 'الصورة',
             ];
         }
         else {
             return [
-                'name' => 'Name',
+                'name' => ' name en',
                 'image' => 'Image'
             ];
         }
@@ -60,13 +64,13 @@ class CategoryRequest extends FormRequest
     {
         if(LaravelLocalization::getCurrentLocale() == 'ar') {
             return [
-                'name.required' => 'الرجاء إدخال :attribute',
+                'name.required' =>'الرجاء إدخال :attribute',
                 'image.required' => 'الرجاء إدخال :attribute'
             ];
         }
         else {
             return [
-                'name.required' => 'Please Enter :attribute',
+                'name.required' =>'Please Enter :attribute',
                 'image.required' => 'Please Enter :attribute',
             ];
         }
