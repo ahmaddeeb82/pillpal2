@@ -18,7 +18,7 @@ class AdminCategoryController extends Controller
         $imagePath = $image->store($uploadFolder, 'public');
         Category::create([
             'name'=>[ 
-                'en' => $request->name,
+                'en' => $request->name_en,
                 'ar' => $request->name_ar],
             'admin_id' => $admin_id,
             'image' => $imagePath,
@@ -29,6 +29,7 @@ class AdminCategoryController extends Controller
             'تمت إضافة التصنيف بنجاح'
         );
     }
+
 
     public function showCategories(){
         $admin_id = auth()->guard('admin')->user()->id;
@@ -49,10 +50,26 @@ class AdminCategoryController extends Controller
         );        
     }
 
+
     public function editCategory(CategoryRequest $request){
-        $admin_id = auth()->guard('admin')->user()->id;
+         $admin_id = auth()->guard('admin')->user()->id;
         $categories = Category::where('admin_id', $admin_id)->get();
         $category_id = $request->input('category_id');
+        $new_name = $request-> validate();
+       
+        if( !$new_name || !$category_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some Data Are Missed.',
+                'بيانات الطلب الذي تقوم به غير مكتملة.'
+           );
+        }
+        // $new_image = $request->file('image');
+        // $uploadFolder = 'categories/'. auth()->guard('admin')->user()->id;
+        // $new_imagePath = $new_image->store($uploadFolder, 'public');
 
+        
+        $category = $categories ->find($category_id);
+        $category -> update($new_name);
         }
 }
