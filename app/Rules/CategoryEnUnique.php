@@ -22,6 +22,7 @@ class CategoryEnUnique implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         foreach($this->categories as $category) {
+            //dd($category->getTranslations('name'));
             if($value == $category->getTranslations('name')['en']) {
                 $fail("The category English name must be unique.");
             }

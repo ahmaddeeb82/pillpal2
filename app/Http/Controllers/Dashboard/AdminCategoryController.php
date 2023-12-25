@@ -14,7 +14,7 @@ class AdminCategoryController extends Controller
     public function addCategory(CategoryRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
         $image = $request->file('image');
-        $uploadFolder = 'categories/'. auth()->gurad('admin')->user()->id;
+        $uploadFolder = 'categories/'. auth()->guard('admin')->user()->id;
         $imagePath = $image->store($uploadFolder, 'public');
         Category::create([
             'name'=>[ 
