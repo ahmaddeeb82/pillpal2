@@ -13,12 +13,18 @@ class AdminCategoryController extends Controller
 {
     public function addCategory(CategoryRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
+        $image = $request->file('image');
         Category::create([
             'name'=>[ 
                 'en' => $request->name,
                 'ar' => $request->name_ar],
             'admin_id' => $admin_id,
-            'image' => $request->image,
+        ]);
+        $user = auth()->guard('admin')->user();
+        $uploadFolder = 'categories/'. auth()->gurad('admin')->user()->id;
+        $imagePath = $image->store($uploadFolder, 'public');
+        $user->update([
+            'image' => $imagePath,
         ]);
 
         return ApiResponse::apiSendResponse(
@@ -51,6 +57,6 @@ class AdminCategoryController extends Controller
         $admin_id = auth()->guard('admin')->user()->id;
         $categories = Category::where('admin_id', $admin_id)->get();
         $category_id = $request->input('category_id');
-        
+
         }
 }
