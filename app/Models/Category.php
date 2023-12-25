@@ -10,7 +10,7 @@ class Category extends Model
 {
     use HasFactory, HasTranslations;
 
-    protected $fillable = ['name', 'admin_id'];
+    protected $fillable = ['name', 'admin_id', 'image'];
 
     public $translatable = ['name'];
 
