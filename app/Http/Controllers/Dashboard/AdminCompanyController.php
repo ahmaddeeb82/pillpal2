@@ -50,7 +50,15 @@ class AdminCompanyController extends Controller
 
     public function companyInfo(Request $request){
         $admin_id = auth()->guard('admin')->user()->id;
-        $company = Company::where('id' ,$request->input('company_id'))->where('admin_id', $admin_id)->get();
+        $company_id = $request->input('company_id');
+        if(!$company_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some company Data Are Missed.',
+                'بيانات الشركة الذي تقوم به غير مكتملة.'
+           );
+        }
+        $company= Company::where('id',$company_id)->where('admin_id', $admin_id)->first();
         if (!$company){
              return ApiResponse::apiSendResponse(
                  400,
