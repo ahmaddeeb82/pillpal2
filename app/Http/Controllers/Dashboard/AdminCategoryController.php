@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Category;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\EditCategoryRequest;
 use App\Http\Resources\AdminCategoryResource;
-use App\Http\Resources\CategoryResource;
 use App\Http\Resources\DashboardCategoryResource;
-use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Resources\MedicineWithoutInfoResource;
 
 class AdminCategoryController extends Controller
 {
@@ -112,4 +112,30 @@ class AdminCategoryController extends Controller
 
 
     
+
+    public function categoryMedicines(Request $request){
+        $admin_id = auth()->guard('admin')->user()->id;
+        $category_id = $request->input('category_id');
+        if(!$category_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some category Data Are Missed.',
+                'بيانات التصنيف الذي تقوم به غير مكتملة.'
+           );
+        }
+        $category= Category::where('id',$category_id)->where('admin_id', $admin_id)->first();
+        if (!$category){
+            return ApiResponse::apiSendResponse(
+              200,
+              'Some category Data Are Missed.',
+              'بيانات التصنيف الذي تقوم به غير مكتملة.'
+            );
+        }
+        return ApiResponse::apiSendResponse(
+            200,
+            'category data Has Been Retrieved Successfully',
+            'تمت إعادة بيانات التصنيف بنجاح',
+            MedicineWithoutInfoResource::collection($category->medicines)
+         );
+    }
 }
