@@ -103,12 +103,14 @@ Route::group(['prefix'=> 'admin'],function(){
             Route::post('add', [AdminCompanyController::class, 'addCompany']);
             Route::get('show', [AdminCompanyController::class, 'showCompanies']);
             Route::post('edit', [AdminCompanyController::class, 'editCompanyName']);
+            Route::get('detail', [AdminCompanyController::class, 'companyInfo']);
         });
         //---------------------Categories Routes---------------------------------------
         Route::group(['prefix' => 'categories'], function() {
             Route::post('add', [AdminCategoryController::class, 'addCategory']);
             Route::get('show', [AdminCategoryController::class, 'showCategories']);
             Route::post('edit', [AdminCategoryController::class, 'editCategory']);
+            Route::get('detail', [AdminCategoryController::class, 'categoryInfo']);
         });
         //---------------------Medicines Routes---------------------------------------
         Route::group(['prefix' => 'medicines'], function() {
