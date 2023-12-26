@@ -89,8 +89,8 @@ class AdminCategoryController extends Controller
         if(!$category_id){
             return ApiResponse::apiSendResponse(
                 400,
-                'Some Data Are Missed.',
-                'بيانات الطلب الذي تقوم به غير مكتملة.'
+                'Some category Data Are Missed.',
+                'بيانات التصنيف الذي تقوم به غير مكتملة.'
            );
         }
         $image = $request->file('image');
