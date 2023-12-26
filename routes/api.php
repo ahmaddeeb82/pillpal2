@@ -113,7 +113,7 @@ Route::group(['prefix'=> 'admin'],function(){
         //---------------------Medicines Routes---------------------------------------
         Route::group(['prefix' => 'medicines'], function() {
             Route::post('add', [AdminMedicineController::class, 'addmedicine']);
-            // Route::get('show', [AdminCategoryController::class, 'showCategories']);
+            Route::get('home', [AdminMedicineController::class, 'homMedicineInfo']);
             // Route::post('edit', [AdminCategoryController::class, 'editCategory']);
         });
     });
