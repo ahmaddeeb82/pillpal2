@@ -9,6 +9,8 @@ use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AdminCompanyController extends Controller
 {
     public function addCompany(CompnayRequest $request) {
@@ -44,6 +46,28 @@ class AdminCompanyController extends Controller
         );
     }
 
+
+    public function companyInfo(Request $request){
+        $admin_id = auth()->guard('admin')->user()->id;
+        $company = Company::where('id' ,$request->input('company_id'))->where('admin_id', $admin_id)->get();
+        if (!$company){
+             return ApiResponse::apiSendResponse(
+                 400,
+                 'Some company Data Are Missed.',
+                 'بيانات الشركة الذي تقوم به غير مكتملة.'
+             );
+         }
+        
+        return ApiResponse::apiSendResponse(
+            200,
+            'company data Has Been Retrieved Successfully',
+            'تمت إعادة بيانات الشركة بنجاح',
+             CompanyResource::collection($company)
+            
+        );
+    }
+
+
     public function editCompanyName(CompnayRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
         $companies = Company::where('admin_id', $admin_id)->get();
@@ -66,4 +90,5 @@ class AdminCompanyController extends Controller
             'تم تعديل اسم الشركة بنجاح'
         );
     }
+
 }
