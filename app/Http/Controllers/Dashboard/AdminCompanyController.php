@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\Company;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompnayRequest;
 use App\Http\Resources\CompanyResource;
-use App\Models\Company;
-use Illuminate\Http\Request;
 
 use function PHPUnit\Framework\isEmpty;
+use App\Http\Resources\MedicineWithoutInfoResource;
 
 class AdminCompanyController extends Controller
 {
@@ -91,4 +92,31 @@ class AdminCompanyController extends Controller
         );
     }
 
+
+
+    public function companyMedicines(Request $request){
+        $admin_id = auth()->guard('admin')->user()->id;
+        $company_id = $request->input('company_id');
+        if(!$company_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some company Data Are Missed.',
+                'بيانات الشركة الذي تقوم به غير مكتملة.'
+           );
+        }
+        $company= Company::where('id',$company_id)->where('admin_id', $admin_id)->first();
+        if (!$company){
+            return ApiResponse::apiSendResponse(
+              200,
+              'Some company Data Are Missed.',
+              'بيانات الشركة الذي تقوم به غير مكتملة.'
+            );
+        }
+        return ApiResponse::apiSendResponse(
+            200,
+            'company data Has Been Retrieved Successfully',
+            'تمت إعادة بيانات الشركة بنجاح',
+            MedicineWithoutInfoResource::collection($company->medicines)
+         );
+    }
 }
