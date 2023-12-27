@@ -22,9 +22,6 @@ class AdminMedicineController extends Controller
 {
     public function addMedicine(MedicineRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
-        $image = $request->file('image');
-        $uploadFolder = 'medicines/'. auth()->guard('admin')->user()->id;
-        $imagePath = $image->store($uploadFolder, 'public');
         $medicine = Medicine::create([
             'scientific_name' => $request -> scientific_name,
             'commercial_name' => $request -> commercial_name,
@@ -33,7 +30,6 @@ class AdminMedicineController extends Controller
             'expiration_date' => $request -> expiration_date,
             'company_id' => $request -> company_id,
             'admin_id' => $admin_id,
-            'image' => $imagePath
         ]);
         $categoy_id = $request -> input('category_id');
         $medicine -> categories() -> attach($categoy_id);
@@ -77,10 +73,6 @@ class AdminMedicineController extends Controller
                 'بيانات الطلب الذي تقوم به غير مكتملة.'
            );
         }
-
-        $image = $request->file('image');
-        $uploadFolder = 'medicines/'. auth()->guard('admin')->user()->id;
-        $imagePath = $image->store($uploadFolder, 'public');
         $medicine = $medicines->find($medicine_id);
         if(!$medicine){
             return ApiResponse::apiSendResponse(
@@ -97,7 +89,6 @@ class AdminMedicineController extends Controller
             'expiration_date' => $request -> expiration_date,
             'company_id' => $request -> company_id,
             'admin_id' => $admin_id,
-            'image' => $imagePath
         ]);
 
         return ApiResponse::apiSendResponse(

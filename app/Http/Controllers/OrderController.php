@@ -21,6 +21,11 @@ class OrderController extends Controller
 {
     public function createOrder(Request $request)
     {
+        /* $request->validate([
+            'order' => 'required|array',
+            'order.*.med_id' => 'required|exists:meds,id',
+            'order.*.qty' => 'required|integer'
+        ]); */
         $admin_id = $request->header('Str');
         if(!$admin_id) {
             return ApiResponse::apiSendResponse(

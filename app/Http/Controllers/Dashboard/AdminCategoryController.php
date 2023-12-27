@@ -16,15 +16,11 @@ class AdminCategoryController extends Controller
 {
     public function addCategory(CategoryRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
-        $image = $request->file('image');
-        $uploadFolder = 'categories/'. auth()->guard('admin')->user()->id;
-        $imagePath = $image->store($uploadFolder, 'public');
         Category::create([
             'name'=>[ 
                 'en' => $request->name_en,
                 'ar' => $request->name_ar],
             'admin_id' => $admin_id,
-            'image' => $imagePath,
         ]);
         return ApiResponse::apiSendResponse(
             201,
@@ -92,9 +88,6 @@ class AdminCategoryController extends Controller
                 'بيانات التصنيف الذي تقوم به غير مكتملة.'
            );
         }
-        $image = $request->file('image');
-        $uploadFolder = 'categories/'. auth()->guard('admin')->user()->id;
-        $imagePath = $image->store($uploadFolder, 'public');
         $category = Category::find($category_id);
         if(!$category){
             return ApiResponse::apiSendResponse(
@@ -107,7 +100,6 @@ class AdminCategoryController extends Controller
             'name'=>[ 
                 'en' => $request->name_en,
                 'ar' => $request->name_ar],
-            'image' => $imagePath,
         ]);
         return ApiResponse::apiSendResponse(
             200,

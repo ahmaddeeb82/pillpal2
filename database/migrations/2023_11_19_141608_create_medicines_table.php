@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('price');
             $table->date('expiration_date');
             $table->boolean('expired')->default(false);
-            $table->string('image')->nullable();
+            $table->string('image')->default('medicines/Childens-Cetamol-Drops-15mL-Left-copy-copy.png');
             $table->foreignId('company_id')->constrained();
             $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

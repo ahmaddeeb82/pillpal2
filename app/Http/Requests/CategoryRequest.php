@@ -39,7 +39,6 @@ class CategoryRequest extends FormRequest
         return [
             'name_en' => ['required', new CategoryEnUnique($this->user()->id)],
             'name_ar' => ['required', new CategoryArUnique($this->user()->id)],
-            'image' => 'required|mimes:png,jpg,jpeg',
             //'image' =>'required'
         ];
     }

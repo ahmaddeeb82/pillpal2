@@ -40,7 +40,6 @@ class MedicineRequest extends FormRequest
             'quantity' => 'required',
             'price' => 'required',
             'expiration_date' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg',
             'company_id' => 'required',
             'category_id' => 'required'
         ];

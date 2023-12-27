@@ -39,7 +39,6 @@ class EditCategoryRequest extends FormRequest
         return [
             'name_en' => ['required', new EditCategoryEnUnique($this->user()->id, $this->category_id)],
             'name_ar' => ['required', new EditCategoryArUnique($this->user()->id, $this->category_id)],
-            'image' => 'required|mimes:png,jpg,jpeg',
         ];
     }
         
