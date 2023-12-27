@@ -5,10 +5,11 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use App\Exceptions\MyValidationException;
+use App\Rules\EditMedicineRule;
 use Illuminate\Validation\Rule;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-class MedicineRequest extends FormRequest
+class EditMedicineRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
     /**
@@ -36,7 +37,7 @@ class MedicineRequest extends FormRequest
         // ['required', Rule::unique('categories')->where(function($query) {return $query->where('admin_id', $this->user()->id);})]
         return [
             'scientific_name' => 'required',
-            'commercial_name' => ['required', Rule::unique('medicines')->where(function($query) {return $query->where('admin_id', $this->user()->id);})],
+            'commercial_name' => ['required', new EditMedicineRule(auth()->guard('admin')->user()->id, $this->medicine_id)],
             'quantity' => 'required',
             'price' => 'required',
             'expiration_date' => 'required',

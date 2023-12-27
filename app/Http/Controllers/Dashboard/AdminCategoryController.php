@@ -85,7 +85,6 @@ class AdminCategoryController extends Controller
 
     public function editCategory(EditCategoryRequest $request){
         $category_id = $request->input('category_id');
-        //$new_data = $request->validated();
         if(!$category_id){
             return ApiResponse::apiSendResponse(
                 400,
@@ -97,6 +96,13 @@ class AdminCategoryController extends Controller
         $uploadFolder = 'categories/'. auth()->guard('admin')->user()->id;
         $imagePath = $image->store($uploadFolder, 'public');
         $category = Category::find($category_id);
+        if(!$category){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Category you want to edit is not exist',
+                'التصنيف الذي تريد تعديل بياناته غير موجود'
+           );
+        }
         $category->update([
             'name'=>[ 
                 'en' => $request->name_en,

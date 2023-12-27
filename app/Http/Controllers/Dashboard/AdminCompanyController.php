@@ -70,8 +70,6 @@ class AdminCompanyController extends Controller
 
 
     public function editCompanyName(CompnayRequest $request){
-        $admin_id = auth()->guard('admin')->user()->id;
-        $companies = Company::where('admin_id', $admin_id)->get();
         $company_id = $request->input('company_id');
         $new_name = $request->input('name');
 
@@ -82,7 +80,16 @@ class AdminCompanyController extends Controller
                 'بيانات الطلب الذي تقوم به غير مكتملة.'
            );
         }
-        $company = $companies-> find($company_id);
+        $company = Company::find($company_id);
+
+        if(!$company){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Company you want to edit is not exist',
+                'الشركة التي تريد تعديل بياناتها غير موجودة'
+           );
+        }
+
         $company ->update(['name'=> $new_name]);
 
         return ApiResponse::apiSendResponse(

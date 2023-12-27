@@ -9,6 +9,7 @@ use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Models\MedicineCategory;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EditMedicineRequest;
 use App\Http\Requests\MedicineRequest;
 use App\Http\Resources\AdminCategoryResource;
 use App\Http\Resources\CompanyResource;
@@ -65,7 +66,7 @@ class AdminMedicineController extends Controller
     }
 
 
-    public function editMedicine(MedicineRequest $request){
+    public function editMedicine(EditMedicineRequest $request){
         $admin_id = auth()->guard('admin')->user()->id;
         $medicines = Medicine::where('admin_id', $admin_id)->get();
         $medicine_id = $request->input('medicine_id');
@@ -81,6 +82,13 @@ class AdminMedicineController extends Controller
         $uploadFolder = 'medicines/'. auth()->guard('admin')->user()->id;
         $imagePath = $image->store($uploadFolder, 'public');
         $medicine = $medicines->find($medicine_id);
+        if(!$medicine){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Medicine you want to edit is not exist',
+                'الدواء الذي تريد تعديل بياناته غير موجودة'
+           );
+        }
         $medicine -> update([
             'scientific_name' => $request -> scientific_name,
             'commercial_name' => $request -> commercial_name,
