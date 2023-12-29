@@ -36,7 +36,7 @@ class AdminRgisterRequest extends FormRequest
             return [
                 'first_name' => 'required',
                 'last_name'=> 'required',
-                'phone' => 'required|unique:users|phone:INTERNATIONAL',
+                'phone' => 'required|unique:admins|phone:INTERNATIONAL',
                 'address'=> 'required',
                 'password' => 'required|min:6',
                 'confirm_password' => 'required|same:password',
