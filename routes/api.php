@@ -116,10 +116,10 @@ Route::group(['prefix'=> 'admin'],function(){
         });
         //---------------------Medicines Routes---------------------------------------
         Route::group(['prefix' => 'medicines'], function() {
-            Route::post('add', [AdminMedicineController::class, 'addmedicine']);
+            Route::get('add', [AdminMedicineController::class, 'addmedicine']);
             Route::get('home', [AdminMedicineController::class, 'homMedicineInfo']);
             Route::get('detail', [AdminMedicineController::class, 'showMedicineInfo']);
-            Route::post('edit', [AdminMedicineController::class, 'editMedicine']);
+            Route::get('edit', [AdminMedicineController::class, 'editMedicine']);
             Route::get('count', [AdminMedicineController::class, 'medicinesCounter']);
         });
         //---------------------Search Route--------------------------------
