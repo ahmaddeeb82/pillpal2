@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ReportRequest;
 use App\Http\Resources\OrderMedicineResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
@@ -239,6 +240,32 @@ class AdminOrderController extends Controller
             'Orders Delivered Number Has Been Retrieved Successfully!',
             'تم إعادة عدد الطلبات المستلمة بنجاح',
             ['Status' => 'Delivered', 'Count' => $orders_count]
+        );
+    }
+
+    public function reportOrders(ReportRequest $request)
+    {
+        $admin_id = auth()->guard('admin')->user()->id;
+
+        $startTime = $request->start_date.' 00:00:00';
+        $endTime = $request->end_date. ' 23:59:59';
+
+        $orders = Order::where('admin_id', $admin_id)->whereBetween('created_at', [$startTime, $endTime])->get();
+
+        if (count($orders) == 0) {
+            return ApiResponse::apiSendResponse(
+                200,
+                'There Is No Order In This Storehouse.',
+                'لا يوجد لدى هذا المستوع أي طلبات.'
+            );
+        }
+
+
+        return ApiResponse::apiSendResponse(
+            200,
+            'Orders Has Been Retrieved Successfully',
+            'تمت إعادة طلبيات المستودع بنجاح',
+            OrderResource::collection($orders)
         );
     }
 }

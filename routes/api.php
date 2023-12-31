@@ -98,6 +98,7 @@ Route::group(['prefix'=> 'admin'],function(){
             Route::get('in-preparation', [AdminOrderController::class,'inPreparationCounter']);
             Route::get('sent', [AdminOrderController::class,'sentCounter']);
             Route::get('delivered', [AdminOrderController::class,'deliveredCounter']);
+            Route::get('report', [AdminOrderController::class,'reportOrders']);
         });
         //--------------------Companies Routes-------------------------------
         Route::group(['prefix' => 'companies'], function() {
