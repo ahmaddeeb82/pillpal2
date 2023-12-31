@@ -114,7 +114,7 @@ class AdminMedicineController extends Controller
         $medicine= Medicine::where('id',$medicine_id)->where('admin_id', $admin_id)->first();
         if (!$medicine){
             return ApiResponse::apiSendResponse(
-              200,
+              400,
               'Some medicine Data Are Missed.',
               'بيانات الدواء الذي تقوم به غير مكتملة.'
             );

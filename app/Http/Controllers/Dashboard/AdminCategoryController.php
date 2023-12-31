@@ -124,7 +124,7 @@ class AdminCategoryController extends Controller
         $category= Category::where('id',$category_id)->where('admin_id', $admin_id)->first();
         if (!$category){
             return ApiResponse::apiSendResponse(
-              200,
+              400,
               'Some category Data Are Missed.',
               'بيانات التصنيف الذي تقوم به غير مكتملة.'
             );

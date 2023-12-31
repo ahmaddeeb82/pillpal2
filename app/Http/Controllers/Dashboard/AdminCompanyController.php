@@ -114,7 +114,7 @@ class AdminCompanyController extends Controller
         $company= Company::where('id',$company_id)->where('admin_id', $admin_id)->first();
         if (!$company){
             return ApiResponse::apiSendResponse(
-              200,
+              400,
               'Some company Data Are Missed.',
               'بيانات الشركة الذي تقوم به غير مكتملة.'
             );
