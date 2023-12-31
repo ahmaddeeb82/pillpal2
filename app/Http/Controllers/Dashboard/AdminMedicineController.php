@@ -17,6 +17,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\MedicineResource;
 use App\Http\Resources\MedicineWithoutInfoResource;
 use App\Http\Resources\MedicineHomeDashboardResource;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AdminMedicineController extends Controller
 {
@@ -139,7 +140,7 @@ class AdminMedicineController extends Controller
             );
         }
         $results = Medicine::where('scientific_name','like','%'.$search.'%')->where('admin_id', $admin_id)->get();
-        $results2 = Category::where('name','like','%'.$search.'%')->where('admin_id', $admin_id)->get();
+        $results2 = Category::where('name->'. LaravelLocalization::getCurrentLocale(),'like','%'.$search.'%')->where('admin_id', $admin_id)->get();
         if (count($results)==0 && count($results2)==0){
             return ApiResponse::apiSendResponse(
                 200,
@@ -147,14 +148,16 @@ class AdminMedicineController extends Controller
                 'لم يتم العثور على هذا العنصر'
             );
         }
-        $finalresults[] = MedicineWithoutInfoResource::collection($results);
-        $finalresults[] = AdminCategoryResource::collection($results2);
+        $finalresults['medicines'] = MedicineWithoutInfoResource::collection($results);
+        $finalresults['categories'] = CategoryResource::collection($results2);
         return ApiResponse::apiSendResponse(
             200,
             'The data you searched for was successfully returned',
             'تم إرجاع البيانات التي بحثت عنها بنجاح',
             $finalresults
         );
+
+
     }
 
 
