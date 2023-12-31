@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\AdminCategoryController;
 use App\Http\Controllers\Dashboard\AdminCompanyController;
 use App\Http\Controllers\Dashboard\AdminMedicineController;
 use App\Http\Controllers\Dashboard\AdminOrderController;
+use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -124,6 +125,8 @@ Route::group(['prefix'=> 'admin'],function(){
         });
         //---------------------Search Route--------------------------------
         Route::get('search',[AdminMedicineController::class,'searchByName']) ;
+        //---------------------Search Route--------------------------------
+        Route::get('report',[ReportController::class, 'viewReport']);
     });
 });
 });
