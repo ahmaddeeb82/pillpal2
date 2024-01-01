@@ -70,8 +70,8 @@ class AdminMedicineController extends Controller
         if(!$medicine_id){
             return ApiResponse::apiSendResponse(
                 400,
-                'Some Data Are Missed.',
-                'بيانات الطلب الذي تقوم به غير مكتملة.'
+                'Some medicine Data Are Missed.',
+                'بيانات الدواء الذي تقوم به غير مكتملة.'
            );
         }
         $medicine = $medicines->find($medicine_id);
@@ -79,7 +79,7 @@ class AdminMedicineController extends Controller
             return ApiResponse::apiSendResponse(
                 400,
                 'Medicine you want to edit is not exist',
-                'الدواء الذي تريد تعديل بياناته غير موجودة'
+                'الدواء الذي تريد تعديل بياناته غير موجود'
            );
         }
         $medicine -> update([
@@ -114,10 +114,10 @@ class AdminMedicineController extends Controller
         $medicine= Medicine::where('id',$medicine_id)->where('admin_id', $admin_id)->first();
         if (!$medicine){
             return ApiResponse::apiSendResponse(
-              400,
-              'Some medicine Data Are Missed.',
-              'بيانات الدواء الذي تقوم به غير مكتملة.'
-            );
+                400,
+                'medicine you want to show his information is not exist',
+                'الدواء الذي تريد عرض معلوماته غير موجود'
+           );
         }
         return ApiResponse::apiSendResponse(
             200,

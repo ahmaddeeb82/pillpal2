@@ -32,13 +32,22 @@ class AdminCategoryController extends Controller
 
     public function categoryInfo(Request $request){
         $admin_id = auth()->guard('admin')->user()->id;
-        $category = Category::where('id' ,$request->input('category_id'))->where('admin_id', $admin_id)->get();
-        if (!$category){
-             return ApiResponse::apiSendResponse(
-                 400,
-                 'Some category Data Are Missed.',
-                 'بيانات التصنيف الذي تقوم به غير مكتملة.'
-             );
+        $category_id = $request->input('category_id');
+        if(!$category_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some category Data Are Missed.',
+                'بيانات التصنيف الذي تقوم به غير مكتملة.'
+           );
+        }
+        $category= Category::where('id',$category_id)->where('admin_id', $admin_id)->get();
+       // $category = Category::where('id' ,$request->input('category_id'))->where('admin_id', $admin_id)->get();
+        if (count($category)==0){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Category you want to show his information is not exist',
+                'التصنيف الذي تريد عرض معلوماته غير موجود'
+           );
          }
         
         return ApiResponse::apiSendResponse(
@@ -124,10 +133,10 @@ class AdminCategoryController extends Controller
         $category= Category::where('id',$category_id)->where('admin_id', $admin_id)->first();
         if (!$category){
             return ApiResponse::apiSendResponse(
-              400,
-              'Some category Data Are Missed.',
-              'بيانات التصنيف الذي تقوم به غير مكتملة.'
-            );
+                400,
+                'Category you want to show his medicines is not exist',
+                'التصنيف الذي تريد عرض ادويته غير موجود'
+           );
         }
         return ApiResponse::apiSendResponse(
             200,

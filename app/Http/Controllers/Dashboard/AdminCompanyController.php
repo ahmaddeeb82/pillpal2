@@ -50,13 +50,22 @@ class AdminCompanyController extends Controller
 
     public function companyInfo(Request $request){
         $admin_id = auth()->guard('admin')->user()->id;
-        $company = Company::where('id' ,$request->input('company_id'))->where('admin_id', $admin_id)->get();
-        if (!$company){
-             return ApiResponse::apiSendResponse(
-                 400,
-                 'Some company Data Are Missed.',
-                 'بيانات الشركة الذي تقوم به غير مكتملة.'
-             );
+        $company_id = $request->input('company_id');
+        if(!$company_id){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Some company Data Are Missed.',
+                'بيانات الشركة الذي تقوم به غير مكتملة.'
+           );
+        }
+        $company= Company::where('id',$company_id)->where('admin_id', $admin_id)->get();
+         //$company = Company::where('id' ,$request->input('company_id'))->where('admin_id', $admin_id)->get();
+        if (count($company)==0){
+            return ApiResponse::apiSendResponse(
+                400,
+                'Company you want to show his information is not exist',
+                'الشركة التي تريد عرض معلوماتها غير موجودة'
+           );
          }
         
         return ApiResponse::apiSendResponse(
@@ -76,8 +85,8 @@ class AdminCompanyController extends Controller
         if(!$new_name || !$company_id){
             return ApiResponse::apiSendResponse(
                 400,
-                'Some Data Are Missed.',
-                'بيانات الطلب الذي تقوم به غير مكتملة.'
+                'Some company Data Are Missed.',
+                'بيانات الشركة الذي تقوم به غير مكتملة.'
            );
         }
         $company = Company::find($company_id);
@@ -114,10 +123,10 @@ class AdminCompanyController extends Controller
         $company= Company::where('id',$company_id)->where('admin_id', $admin_id)->first();
         if (!$company){
             return ApiResponse::apiSendResponse(
-              400,
-              'Some company Data Are Missed.',
-              'بيانات الشركة الذي تقوم به غير مكتملة.'
-            );
+                400,
+                'Company you want to show his medicines is not exist',
+                'الشركة التي تريد عرض ادويتها غير موجودة'
+           );
         }
         return ApiResponse::apiSendResponse(
             200,
