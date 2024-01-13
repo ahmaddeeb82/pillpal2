@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\OrderReset;
 use App\Helpers\ApiResponse;
+use App\Helpers\SendNotification;
 use App\Http\Resources\OrderMedicineResource;
 use App\Http\Resources\OrderResource;
+use App\Models\AdminNotification;
+use App\Models\AdminToken;
 use App\Models\Medicine;
 use App\Models\MedicineOrder;
 use App\Models\Order;
@@ -121,6 +124,16 @@ class OrderController extends Controller
         $order->update([
             'total_price' => $total_price,
         ]);
+
+        AdminNotification::create([
+            'title' => 'Some Order Has Been Added',
+            'body' => auth()->user()->first_name . 'Has Ordered Some Medicines From Your Store.',
+            'admin_id' => $admin_id
+        ]);
+
+        SendNotification::send(AdminToken::where('admin_id', $admin_id)->latest()->first()->device_token,
+        'Some Order Has Been Added',
+        auth()->user()->first_name . 'Has Ordered Some Medicines From Your Store.');
         DB::commit();
         return ApiResponse::apiSendResponse(
             200,
@@ -203,7 +216,7 @@ class OrderController extends Controller
                 'بيانات الطلب الذي تقوم به غير مكتملة.'
             );
         }
-        
+
         if($order->status != 'in_preparation') {
             return ApiResponse::apiSendResponse(
                 403,

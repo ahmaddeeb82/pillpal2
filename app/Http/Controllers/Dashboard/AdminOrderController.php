@@ -3,15 +3,32 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Helpers\ApiResponse;
+use App\Helpers\SendNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
 use App\Http\Resources\OrderMedicineResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\UserNotification;
+use App\Models\UserToken;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
+    public static function orderNotification($title, $body, $user_id) {
+
+        UserNotification::create([
+            'title' => $title,
+            'body' => $body,
+            'user_id' => $user_id
+        ]);
+
+        SendNotification::send(UserToken::where('user_id', $user_id)->latest()->first()->device_token,
+        $title,
+        $body);
+
+    }
+
     public function adminInPreparationOrders(Request $request)
     {
         $admin_id = auth()->guard('admin')->user()->id;
@@ -116,7 +133,7 @@ class AdminOrderController extends Controller
             new OrderMedicineResource($order)
         );
     }
-    
+
     public function updateStatus(Request $request)
     {
         $order_id = $request->order_id;
@@ -143,6 +160,13 @@ class AdminOrderController extends Controller
             $order->update([
                 'status'=>'sent',
             ]);
+
+
+            $this->orderNotification('Order Status Has Been Updated',
+                auth()->guard('admin')->user()->first_name . ' Has Updated Your Order Status To Be Sent',
+                $order->user_id
+            );
+
             return ApiResponse::apiSendResponse(
                 200,
                 'Order Status Has Been Modified Successfully.',
@@ -153,6 +177,12 @@ class AdminOrderController extends Controller
             $order->update([
                 'status'=>'delivered',
             ]);
+
+            $this->orderNotification('Order Status Has Been Updated',
+                auth()->guard('admin')->user()->first_name . ' Has Updated Your Order Status To Be Delivered',
+                $order->user_id
+            );
+
             return ApiResponse::apiSendResponse(
                 200,
                 'Order Status Has Been Modified Successfully.',
@@ -194,13 +224,19 @@ class AdminOrderController extends Controller
             $order->update([
                 'payed'=>true,
             ]);
+
+            $this->orderNotification('Order Status Has Been Updated',
+                auth()->guard('admin')->user()->first_name . 'Has Updated Your Order Payement Status To Be Payed',
+                $order->user_id
+            );
+
             return ApiResponse::apiSendResponse(
                 200,
                 'Order Payment Status Has Been Modified Successfully.',
                 'تم تعديل حالة الدفع بنجاح'
             );
         }
-        
+
         else {
             return ApiResponse::apiSendResponse(
                 403,

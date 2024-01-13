@@ -35,7 +35,8 @@ class AuthLoginRequest extends FormRequest
     {
         return [
             'phone' => 'required|phone:INTERNATIONAL',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'device_token' => 'required'
         ];
     }
 
@@ -45,12 +46,16 @@ class AuthLoginRequest extends FormRequest
             return [
                 'phone' => 'رقم الهاتف',
                 'password' => 'كلمة المرور',
+                'device_token' => 'توكن الجهاز'
+
             ];
         }
         else {
             return [
                 'phone'=> 'Phone Number',
                 'password'=> 'Password',
+                'device_token' => 'Device Token'
+
             ];
         }
     }
@@ -63,6 +68,7 @@ class AuthLoginRequest extends FormRequest
                 'password.required'=> 'الرجاء إدخال :attribute الخاصة بك',
                 'phone.phone'=> 'الرجاء إدخال :attribute الخاص بك بطريقة صحيحة',
                 'password.min'=> ':attribute الخاصة بك يجب أن تكون على الأقل :min',
+                'device_token.required' => 'الرجاء إدخال :attribute الخاص بك'
             ];
         }
         else {
@@ -70,6 +76,7 @@ class AuthLoginRequest extends FormRequest
                 'phone.required'=> 'Please Enter Your :attribute .',
                 'password.required'=> 'Please Enter Your :attribute .',
                 'phone.phone'=> 'Please Enter A Valid :attribute .',
+                'device_token.required' => 'Please Enter Your :attribute .'
             ];
         }
     }

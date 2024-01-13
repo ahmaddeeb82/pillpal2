@@ -7,6 +7,7 @@ use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Resources\AuthResource;
 use App\Models\User;
+use App\Models\UserToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,11 +21,16 @@ class AuthController extends Controller
 
         $credentials = $request->validated();
 
-        data_forget($credentials, 'confirm_password');
+        data_forget($credentials, ['confirm_password', 'device_token']);
 
         $credentials['password'] = Hash::make($credentials['password']);
 
         $user = User::create($credentials);
+
+        UserToken::create([
+            'device_token' => $request->device_token,
+            'user_id' => $user->id
+        ]);
 
         $data['token'] = $user->createToken('testProject')->accessToken;
 
@@ -47,6 +53,10 @@ class AuthController extends Controller
         if (auth()->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
             $data['token'] = auth()->user()->createToken('testProject')->accessToken;
             $data['id'] = auth()->user()->id;
+            UserToken::create([
+                'device_token' => $request->device_token,
+                'user_id' => $data['id']
+            ]);
             return ApiResponse::apiSendResponse(
                 200,
                 'User is logged in successfully!',
@@ -67,7 +77,6 @@ class AuthController extends Controller
         if ($request->user()) {
             $token = $request->user()->token();
             $token->revoke();
-
             return ApiResponse::apiSendResponse(
                 200,
                 'Logged out successfully!',

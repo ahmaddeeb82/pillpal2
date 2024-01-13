@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AuthLoginRequest;
 use App\Http\Requests\AuthRegisterRequest;
+use App\Models\AdminToken;
 
 class AdminController extends Controller
 {
@@ -20,6 +21,10 @@ class AdminController extends Controller
         if (auth()->guard('admin_ses')->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
             $data['token'] = auth()->guard('admin_ses')->user()->createToken('testProject')->accessToken;
             $data['id'] = auth()->guard('admin_ses')->user()->id;
+            AdminToken::create([
+                'device_token' => $request->device_token,
+                'admin_id' => $data['id']
+            ]);
             return ApiResponse::apiSendResponse(
                 200,
                 'User is logged in successfully!',
@@ -54,8 +59,8 @@ class AdminController extends Controller
         );
     }
 
-    public function superLogin(AuthLoginRequest $request) {
-        $credentials = $request->validated();
+    public function superLogin(Request $request) {
+        $credentials = $request->all();
 
         if (auth()->guard('superadmin_ses')->attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']])) {
             $data['token'] = auth()->guard('superadmin_ses')->user()->createToken('testProject')->accessToken;

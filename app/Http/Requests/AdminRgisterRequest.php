@@ -40,8 +40,8 @@ class AdminRgisterRequest extends FormRequest
                 'address'=> 'required',
                 'password' => 'required|min:6',
                 'confirm_password' => 'required|same:password',
+                'device_token' => 'required'
             ];
-        
     }
 
     public function attributes(): array
@@ -54,6 +54,7 @@ class AdminRgisterRequest extends FormRequest
                 'address'=> 'العنوان',
                 'password' => 'كلمة المرور',
                 'confirm_password'=> 'تأكيد كلمة المرور',
+                'device_token' => 'توكن الجهاز'
             ];
         }
         else {
@@ -64,6 +65,7 @@ class AdminRgisterRequest extends FormRequest
                 'address'=> 'Address',
                 'password'=> 'Password',
                 'confirm_password'=> 'Password Confirm',
+                'device_token' => 'Device Token'
             ];
         }
     }
@@ -82,6 +84,7 @@ class AdminRgisterRequest extends FormRequest
                 'address.required' => 'الرجاء إدخال :attribute الخاص بك',
                 'confirm_password.required' => 'يرجى ملئ حقل :attribute',
                 'confirm_password.same' => 'يجب أن يتطابق حقل :attribute مع :other',
+                'device_token.required' => 'الرجاء إدخال :attribute الخاص بك'
             ];
         }
         else {
@@ -94,6 +97,7 @@ class AdminRgisterRequest extends FormRequest
                 'phone.phone'=> 'Please Enter A Valid :attribute .',
                 'address.required' => 'Please Enter Your :attribute .',
                 'confirm_password.required' => 'Please Enter Your :attribute .',
+                'device_token.required' => 'Please Enter Your :attribute .'
             ];
         }
     }
